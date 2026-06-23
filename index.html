@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phone Lookup Pro - DNC & Owner Info</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>PhoneLookup<span class="highlight">Pro</span></span>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active"><i class="fas fa-search"></i> Lookup</a>
+                    <a href="#"><i class="fas fa-history"></i> History</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                </div>
+                <div class="nav-right">
+                    <span class="badge">v2.0</span>
+                    <span class="status online"><i class="fas fa-circle"></i> API Live</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="hero-tag"><i class="fas fa-bolt"></i> Instant Lookup</span>
+                    <h1>Phone Number <br /><span class="gradient-text">Intelligence</span></h1>
+                    <p>Check DNC status, litigators, blacklists &amp; owner information in <strong>real-time</strong>.</p>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">12.5K+</span>
+                        <span class="stat-label">Searches Today</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">98.7%</span>
+                        <span class="stat-label">Accuracy Rate</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">4.9★</span>
+                        <span class="stat-label">User Rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SEARCH SECTION ==================== -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-card">
+                <div class="search-header">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Enter a US phone number</span>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="phoneInput" placeholder="(531) 495-9124" maxlength="14" />
+                    <button id="searchBtn" onclick="performSearch()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="search-hints">
+                    <button class="hint-btn" onclick="fillSample('5314959124')">📱 Sample 1</button>
+                    <button class="hint-btn" onclick="fillSample('4358493906')">📱 Sample 2</button>
+                    <button class="hint-btn" onclick="fillSample('8013606608')">📱 Sample 3</button>
+                </div>
+                <div id="errorMsg" class="error-msg" style="display:none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText">Please enter a valid 10-digit phone number.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== RESULTS SECTION ==================== -->
+    <section id="resultsSection" class="results-section" style="display:none;">
+        <div class="container">
+
+            <!-- Loading -->
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Fetching intelligence data...</p>
+            </div>
+
+            <!-- Results Container -->
+            <div id="resultsContainer" style="display:none;">
+
+                <!-- Compliance Status -->
+                <div class="result-card compliance-card">
+                    <div class="card-header">
+                        <i class="fas fa-gavel"></i>
+                        <h3>Compliance Status</h3>
+                        <span class="badge-status" id="statusBadge">✅ Clean</span>
+                    </div>
+                    <div class="compliance-grid">
+                        <div class="compliance-item">
+                            <div class="label"><i class="fas fa-map-marker-alt"></i> State / Location</div>
+                            <div class="value" id="stateDisplay">—</div>
+                        </div>
+                        <div class="compliance-item">
+                            <div class="label"><i class="fas fa-ban"></i> DNC Status</div>
+                            <div class="value" id="dncDisplay">
+                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
+                            </div>
+                        </div>
+                        <div class="compliance-item">
+                            <div class="label"><i class="fas fa-balance-scale"></i> Litigator</div>
+                            <div class="value" id="litigatorDisplay">
+                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
+                            </div>
+                        </div>
+                        <div class="compliance-item">
+                            <div class="label"><i class="fas fa-skull"></i> Blacklist</div>
+                            <div class="value" id="blacklistDisplay">
+                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Person Info -->
+                <div class="result-card person-card">
+                    <div class="card-header">
+                        <i class="fas fa-user"></i>
+                        <h3>Owner Information</h3>
+                        <span class="badge-person" id="personCount">0 results</span>
+                    </div>
+                    <div id="personInfoContainer">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- TCPA Raw Data -->
+                <div class="result-card raw-card">
+                    <div class="card-header">
+                        <i class="fas fa-code"></i>
+                        <h3>API Response</h3>
+                        <button class="btn-toggle" onclick="toggleRawData()">
+                            <i class="fas fa-chevron-down"></i> Show
+                        </button>
+                    </div>
+                    <div id="rawDataContainer" style="display:none;">
+                        <pre id="rawDataContent"></pre>
+                    </div>
+                </div>
+
+            </div><!-- /resultsContainer -->
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>PhoneLookup<span class="highlight">Pro</span></span>
+                    <p>Real-time phone intelligence &amp; compliance checking.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> API Documentation</a>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <a href="#"><i class="fas fa-chevron-right"></i> DNC Registry</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> TCPA Guide</a>
+                    <a href="#"><i class="fas fa-chevron-right"></i> Support Center</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 PhoneLookup Pro. All rights reserved.</span>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="js/script.js"></script>
+</body>
+</html>
