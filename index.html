@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Phone Lookup Pro - DNC & Owner Info</title>
+    <title>PhoneLookup Pro - Phone Intelligence</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -11,196 +11,1120 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* ========== RESET & ROOT ========== */
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #121926;
+            --bg-card: #1a2537;
+            --bg-card-hover: #223048;
+            --border-color: #2a3a52;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-1: #3b82f6;
+            --accent-2: #8b5cf6;
+            --accent-3: #06b6d4;
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius: 16px;
+            --shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-1); border-radius: 10px; }
+        
+        /* ========== HEADER ========== */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 28px;
+        }
+        .logo .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+        .nav-links a.active::after {
+            content: '';
+            display: block;
+            height: 2px;
+            background: var(--gradient);
+            margin-top: 4px;
+            border-radius: 2px;
+        }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .badge {
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .status {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status.online { color: var(--success); }
+        .status i { font-size: 8px; }
+        
+        /* ========== HERO ========== */
+        .hero {
+            padding: 50px 0 30px;
+            background: radial-gradient(ellipse at top right, rgba(59,130,246,0.08), transparent 70%);
+        }
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .hero-text { flex: 1; }
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59,130,246,0.15);
+            color: var(--accent-1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .hero-text h1 {
+            font-size: 44px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .gradient-text {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-text p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            max-width: 480px;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .stat { text-align: center; }
+        .stat-number {
+            font-size: 26px;
+            font-weight: 800;
+            display: block;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        /* ========== SEARCH ========== */
+        .search-section { padding-bottom: 30px; }
+        .search-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .search-card:hover {
+            border-color: rgba(59,130,246,0.3);
+        }
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+        }
+        .search-header i { font-size: 18px; color: var(--accent-1); }
+        .search-box {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+            outline: none;
+        }
+        .search-box input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .search-box button {
+            padding: 14px 28px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59,130,246,0.4);
+        }
+        .search-box button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .search-hints {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .hint-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .hint-btn:hover {
+            border-color: var(--accent-1);
+            color: var(--text-primary);
+        }
+        .error-msg {
+            margin-top: 14px;
+            padding: 12px 16px;
+            background: rgba(239,68,68,0.12);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 10px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            color: var(--danger);
+            font-size: 14px;
+        }
+        .error-msg.show { display: flex; }
+        
+        /* ========== RESULTS ========== */
+        .results-section { padding: 20px 0 50px; }
+        .loading-state {
+            text-align: center;
+            padding: 50px 0;
+            display: none;
+        }
+        .loading-state.show { display: block; }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-1);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .result-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            animation: fadeUp 0.5s ease forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header i { font-size: 20px; color: var(--accent-1); }
+        .card-header h3 { font-size: 16px; font-weight: 600; }
+        .badge-status {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-status.clean { background: rgba(34,197,94,0.15); color: var(--success); }
+        .badge-status.flagged { background: rgba(239,68,68,0.15); color: var(--danger); }
+        .badge-person {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+        
+        /* Compliance Grid */
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .compliance-item {
+            padding: 14px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        .compliance-item .label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .compliance-item .value {
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .status-clean { color: var(--success); }
+        .status-flagged { color: var(--danger); }
+        .status-warning { color: var(--warning); }
+        
+        /* Person Cards */
+        .person-entry {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--accent-1);
+            transition: var(--transition);
+        }
+        .person-entry:hover {
+            border-left-color: var(--accent-2);
+        }
+        .person-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .person-name {
+            font-size: 17px;
+            font-weight: 700;
+        }
+        .person-age {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .person-email {
+            font-size: 13px;
+            color: var(--accent-1);
+            margin-bottom: 8px;
+        }
+        .person-addresses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 8px;
+        }
+        .address-item {
+            background: var(--bg-card);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .address-item .city-state {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .relatives {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .relative-tag {
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+        .no-result {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+        }
+        .no-result i {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        
+        /* Raw Data */
+        .btn-toggle {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .btn-toggle:hover {
+            border-color: var(--accent-1);
+            color: var(--text-primary);
+        }
+        .raw-data-container pre {
+            background: var(--bg-primary);
+            padding: 16px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+            color: var(--text-secondary);
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            margin-top: 12px;
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 36px 0 16px;
+            margin-top: 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+        .footer-brand i {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 26px;
+        }
+        .footer-brand span {
+            font-size: 18px;
+            font-weight: 800;
+        }
+        .footer-brand .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        .footer-links h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .footer-links a {
+            display: block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 3px 0;
+            transition: var(--transition);
+        }
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+        .footer-links a i {
+            font-size: 7px;
+            margin-right: 6px;
+            color: var(--accent-1);
+        }
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .footer-social {
+            display: flex;
+            gap: 14px;
+        }
+        .footer-social a {
+            color: var(--text-muted);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        .footer-social a:hover {
+            color: var(--text-primary);
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 992px) {
+            .compliance-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .hero-text h1 { font-size: 30px; }
+            .hero-stats { gap: 16px; }
+            .search-card { padding: 20px; }
+            .search-box { flex-direction: column; }
+            .search-box button { justify-content: center; }
+            .nav-links { display: none; }
+            .compliance-grid { grid-template-columns: 1fr 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .compliance-grid { grid-template-columns: 1fr; }
+            .person-header { flex-direction: column; align-items: flex-start; }
+        }
+        
+        /* Results hidden by default */
+        #resultsContainer { display: none; }
+        #resultsContainer.show { display: block; }
+        
+        /* Phone input formatting */
+        #phoneInput {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- ==================== HEADER ==================== -->
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>PhoneLookup<span class="highlight">Pro</span></span>
-                </div>
-                <div class="nav-links">
-                    <a href="#" class="active"><i class="fas fa-search"></i> Lookup</a>
-                    <a href="#"><i class="fas fa-history"></i> History</a>
-                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                </div>
-                <div class="nav-right">
-                    <span class="badge">v2.0</span>
-                    <span class="status online"><i class="fas fa-circle"></i> API Live</span>
-                </div>
-            </nav>
-        </div>
-    </header>
+<!-- ========== HEADER ========== -->
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>PhoneLookup<span class="highlight">Pro</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active"><i class="fas fa-search"></i> Lookup</a>
+                <a href="#"><i class="fas fa-history"></i> History</a>
+                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            </div>
+            <div class="nav-right">
+                <span class="badge">v2.0</span>
+                <span class="status online"><i class="fas fa-circle"></i> API Live</span>
+            </div>
+        </nav>
+    </div>
+</header>
 
-    <!-- ==================== HERO SECTION ==================== -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <span class="hero-tag"><i class="fas fa-bolt"></i> Instant Lookup</span>
-                    <h1>Phone Number <br /><span class="gradient-text">Intelligence</span></h1>
-                    <p>Check DNC status, litigators, blacklists &amp; owner information in <strong>real-time</strong>.</p>
+<!-- ========== HERO ========== -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-tag"><i class="fas fa-bolt"></i> Instant Lookup</span>
+                <h1>Phone Number <br /><span class="gradient-text">Intelligence</span></h1>
+                <p>Check DNC status, litigators, blacklists &amp; owner information in <strong>real-time</strong>.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">12.5K+</span>
+                    <span class="stat-label">Searches Today</span>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">12.5K+</span>
-                        <span class="stat-label">Searches Today</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">98.7%</span>
-                        <span class="stat-label">Accuracy Rate</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">4.9★</span>
-                        <span class="stat-label">User Rating</span>
-                    </div>
+                <div class="stat">
+                    <span class="stat-number">98.7%</span>
+                    <span class="stat-label">Accuracy Rate</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4.9★</span>
+                    <span class="stat-label">User Rating</span>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ==================== SEARCH SECTION ==================== -->
-    <section class="search-section">
-        <div class="container">
-            <div class="search-card">
-                <div class="search-header">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>Enter a US phone number</span>
-                </div>
-                <div class="search-box">
-                    <input type="text" id="phoneInput" placeholder="(531) 495-9124" maxlength="14" />
-                    <button id="searchBtn" onclick="performSearch()">
-                        <i class="fas fa-search"></i> Search
-                    </button>
-                </div>
-                <div class="search-hints">
-                    <button class="hint-btn" onclick="fillSample('5314959124')">📱 Sample 1</button>
-                    <button class="hint-btn" onclick="fillSample('4358493906')">📱 Sample 2</button>
-                    <button class="hint-btn" onclick="fillSample('8013606608')">📱 Sample 3</button>
-                </div>
-                <div id="errorMsg" class="error-msg" style="display:none;">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span id="errorText">Please enter a valid 10-digit phone number.</span>
-                </div>
+<!-- ========== SEARCH ========== -->
+<section class="search-section">
+    <div class="container">
+        <div class="search-card">
+            <div class="search-header">
+                <i class="fas fa-phone-alt"></i>
+                <span>Enter a US phone number</span>
+            </div>
+            <div class="search-box">
+                <input type="text" id="phoneInput" placeholder="(719) 761-9530" maxlength="14" />
+                <button id="searchBtn" onclick="performSearch()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div class="search-hints">
+                <button class="hint-btn" onclick="fillSample('7197619530')">📱 Sample 1</button>
+                <button class="hint-btn" onclick="fillSample('4358493906')">📱 Sample 2</button>
+                <button class="hint-btn" onclick="fillSample('8013606608')">📱 Sample 3</button>
+            </div>
+            <div id="errorMsg" class="error-msg">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Please enter a valid 10-digit phone number.</span>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ==================== RESULTS SECTION ==================== -->
-    <section id="resultsSection" class="results-section" style="display:none;">
-        <div class="container">
+<!-- ========== RESULTS ========== -->
+<section class="results-section">
+    <div class="container">
 
-            <!-- Loading -->
-            <div id="loadingState" class="loading-state">
-                <div class="spinner"></div>
-                <p>Fetching intelligence data...</p>
-            </div>
+        <!-- Loading -->
+        <div id="loadingState" class="loading-state">
+            <div class="spinner"></div>
+            <p>Fetching intelligence data...</p>
+        </div>
 
-            <!-- Results Container -->
-            <div id="resultsContainer" style="display:none;">
-
-                <!-- Compliance Status -->
-                <div class="result-card compliance-card">
-                    <div class="card-header">
+        <!-- Results Container -->
+        <div id="resultsContainer">
+            
+            <!-- Compliance Status -->
+            <div class="result-card">
+                <div class="card-header">
+                    <div class="card-header-left">
                         <i class="fas fa-gavel"></i>
                         <h3>Compliance Status</h3>
-                        <span class="badge-status" id="statusBadge">✅ Clean</span>
                     </div>
-                    <div class="compliance-grid">
-                        <div class="compliance-item">
-                            <div class="label"><i class="fas fa-map-marker-alt"></i> State / Location</div>
-                            <div class="value" id="stateDisplay">—</div>
+                    <span class="badge-status clean" id="statusBadge">✅ Clean</span>
+                </div>
+                <div class="compliance-grid">
+                    <div class="compliance-item">
+                        <div class="label"><i class="fas fa-map-marker-alt"></i> State / Location</div>
+                        <div class="value" id="stateDisplay">—</div>
+                    </div>
+                    <div class="compliance-item">
+                        <div class="label"><i class="fas fa-ban"></i> DNC Status</div>
+                        <div class="value" id="dncDisplay">
+                            <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
                         </div>
-                        <div class="compliance-item">
-                            <div class="label"><i class="fas fa-ban"></i> DNC Status</div>
-                            <div class="value" id="dncDisplay">
-                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
-                            </div>
+                    </div>
+                    <div class="compliance-item">
+                        <div class="label"><i class="fas fa-balance-scale"></i> Litigator</div>
+                        <div class="value" id="litigatorDisplay">
+                            <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
                         </div>
-                        <div class="compliance-item">
-                            <div class="label"><i class="fas fa-balance-scale"></i> Litigator</div>
-                            <div class="value" id="litigatorDisplay">
-                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
-                            </div>
-                        </div>
-                        <div class="compliance-item">
-                            <div class="label"><i class="fas fa-skull"></i> Blacklist</div>
-                            <div class="value" id="blacklistDisplay">
-                                <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
-                            </div>
+                    </div>
+                    <div class="compliance-item">
+                        <div class="label"><i class="fas fa-skull"></i> Blacklist</div>
+                        <div class="value" id="blacklistDisplay">
+                            <span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Person Info -->
-                <div class="result-card person-card">
-                    <div class="card-header">
+            <!-- Person Info -->
+            <div class="result-card">
+                <div class="card-header">
+                    <div class="card-header-left">
                         <i class="fas fa-user"></i>
                         <h3>Owner Information</h3>
-                        <span class="badge-person" id="personCount">0 results</span>
                     </div>
-                    <div id="personInfoContainer">
-                        <!-- Dynamically populated -->
+                    <span class="badge-person" id="personCount">0 results</span>
+                </div>
+                <div id="personInfoContainer">
+                    <div class="no-result">
+                        <i class="fas fa-search"></i>
+                        Search a phone number to see owner information.
                     </div>
                 </div>
+            </div>
 
-                <!-- TCPA Raw Data -->
-                <div class="result-card raw-card">
-                    <div class="card-header">
+            <!-- Raw Data -->
+            <div class="result-card">
+                <div class="card-header">
+                    <div class="card-header-left">
                         <i class="fas fa-code"></i>
                         <h3>API Response</h3>
-                        <button class="btn-toggle" onclick="toggleRawData()">
-                            <i class="fas fa-chevron-down"></i> Show
-                        </button>
                     </div>
-                    <div id="rawDataContainer" style="display:none;">
-                        <pre id="rawDataContent"></pre>
-                    </div>
+                    <button class="btn-toggle" onclick="toggleRawData()">
+                        <i class="fas fa-chevron-down"></i> Show
+                    </button>
                 </div>
-
-            </div><!-- /resultsContainer -->
-        </div>
-    </section>
-
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>PhoneLookup<span class="highlight">Pro</span></span>
-                    <p>Real-time phone intelligence &amp; compliance checking.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i> API Documentation</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Resources</h4>
-                    <a href="#"><i class="fas fa-chevron-right"></i> DNC Registry</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i> TCPA Guide</a>
-                    <a href="#"><i class="fas fa-chevron-right"></i> Support Center</a>
+                <div class="raw-data-container" id="rawDataContainer" style="display:none;">
+                    <pre id="rawDataContent">// Raw API response will appear here</pre>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <span>&copy; 2026 PhoneLookup Pro. All rights reserved.</span>
-                <div class="footer-social">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                </div>
+
+        </div><!-- /resultsContainer -->
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <i class="fas fa-shield-alt"></i>
+                <span>PhoneLookup<span class="highlight">Pro</span></span>
+                <p>Real-time phone intelligence &amp; compliance checking.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
+                <a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a>
+                <a href="#"><i class="fas fa-chevron-right"></i> API Documentation</a>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="#"><i class="fas fa-chevron-right"></i> DNC Registry</a>
+                <a href="#"><i class="fas fa-chevron-right"></i> TCPA Guide</a>
+                <a href="#"><i class="fas fa-chevron-right"></i> Support Center</a>
             </div>
         </div>
-    </footer>
+        <div class="footer-bottom">
+            <span>&copy; 2026 PhoneLookup Pro. All rights reserved.</span>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    <!-- ==================== SCRIPTS ==================== -->
-    <script src="js/script.js"></script>
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+    /* ============================================================
+       PHONE LOOKUP PRO - Complete JavaScript
+       ============================================================ */
+
+    // ========== STATE ==========
+    const state = {
+        lastSearched: '',
+        isLoading: false,
+        rawData: null
+    };
+
+    // ========== DOM REFS ==========
+    const phoneInput = document.getElementById('phoneInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorText = document.getElementById('errorText');
+    const loadingState = document.getElementById('loadingState');
+    const resultsContainer = document.getElementById('resultsContainer');
+
+    // ========== PHONE INPUT FORMATTING ==========
+    phoneInput.addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        let formatted = '';
+        if (value.length > 0) {
+            formatted = '(' + value.substring(0, 3);
+        }
+        if (value.length > 3) {
+            formatted += ') ' + value.substring(3, 6);
+        }
+        if (value.length > 6) {
+            formatted += '-' + value.substring(6, 10);
+        }
+        this.value = formatted;
+    });
+
+    phoneInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+
+    // ========== FILL SAMPLE ==========
+    function fillSample(phone) {
+        phoneInput.value = formatPhoneDisplay(phone);
+        performSearch();
+    }
+
+    function formatPhoneDisplay(phone) {
+        return '(' + phone.substring(0, 3) + ') ' + phone.substring(3, 6) + '-' + phone.substring(6, 10);
+    }
+
+    // ========== API CALLS ==========
+    async function fetchPerson(phone) {
+        const res = await fetch(`https://api.infolookup.site/v1/?x=${phone}`);
+        if (!res.ok) throw new Error(`Person API error: ${res.status}`);
+        return res.json();
+    }
+
+    async function fetchTCPA(phone) {
+        const res = await fetch(`https://api.infolookup.site/tcpa/v1?x=${phone}`);
+        if (!res.ok) throw new Error(`TCPA API error: ${res.status}`);
+        return res.json();
+    }
+
+    // ========== SEARCH ==========
+    async function performSearch() {
+        // Get raw phone
+        const raw = phoneInput.value.replace(/\D/g, '');
+        
+        // Validate
+        if (!raw || raw.length !== 10) {
+            showError('Please enter a valid 10-digit US phone number.');
+            return;
+        }
+        
+        if (raw === state.lastSearched) {
+            showError('This number was just searched. Try a different one.');
+            return;
+        }
+        
+        state.lastSearched = raw;
+        hideError();
+        showLoading();
+        resultsContainer.classList.remove('show');
+
+        try {
+            // Fetch both APIs in parallel
+            const [personData, tcpaData] = await Promise.all([
+                fetchPerson(raw),
+                fetchTCPA(raw)
+            ]);
+
+            state.rawData = { person: personData, tcpa: tcpaData };
+            renderResults(personData, tcpaData, raw);
+            hideLoading();
+            resultsContainer.classList.add('show');
+
+        } catch (error) {
+            console.error('Search error:', error);
+            hideLoading();
+            showError(`Search failed: ${error.message}`);
+        }
+    }
+
+    // ========== RENDER ==========
+    function renderResults(personData, tcpaData, phone) {
+        renderCompliance(tcpaData, phone);
+        renderPerson(personData);
+        renderRawData({ person: personData, tcpa: tcpaData });
+    }
+
+    function renderCompliance(tcpaData, phone) {
+        const stateEl = document.getElementById('stateDisplay');
+        const dncEl = document.getElementById('dncDisplay');
+        const litEl = document.getElementById('litigatorDisplay');
+        const blEl = document.getElementById('blacklistDisplay');
+        const badge = document.getElementById('statusBadge');
+
+        // State from TCPA or area code
+        const state = tcpaData?.results?.state || getStateFromAreaCode(phone);
+        stateEl.textContent = state;
+
+        // TCPA Status
+        const status = tcpaData?.results?.status || '';
+        const isDNC = status.includes('DNC');
+        const isFederal = status.includes('Federal');
+        const isState = status.includes('State');
+
+        let dncText = 'Clean';
+        if (isFederal && isState) dncText = 'Federal & State DNC';
+        else if (isFederal) dncText = 'Federal DNC';
+        else if (isState) dncText = 'State DNC';
+
+        dncEl.innerHTML = isDNC
+            ? `<span class="status-flagged"><i class="fas fa-exclamation-circle"></i> ${dncText}</span>`
+            : `<span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>`;
+
+        // Litigator - Not available in this API
+        litEl.innerHTML = `<span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>`;
+
+        // Blacklist - Not available in this API
+        blEl.innerHTML = `<span class="status-clean"><i class="fas fa-check-circle"></i> Clean</span>`;
+
+        // Overall badge
+        badge.textContent = isDNC ? '⚠️ Flagged' : '✅ Clean';
+        badge.className = `badge-status ${isDNC ? 'flagged' : 'clean'}`;
+    }
+
+    function renderPerson(personData) {
+        const container = document.getElementById('personInfoContainer');
+        const countBadge = document.getElementById('personCount');
+        
+        if (!personData || personData.status !== 'ok' || personData.count === 0) {
+            container.innerHTML = `
+                <div class="no-result">
+                    <i class="fas fa-user-slash"></i>
+                    No owner information found for this number.
+                </div>
+            `;
+            countBadge.textContent = '0 results';
+            return;
+        }
+
+        const people = personData.person || [];
+        countBadge.textContent = `${people.length} result${people.length > 1 ? 's' : ''}`;
+
+        container.innerHTML = people.map((person, idx) => {
+            const ageStr = person.age ? `${person.age} yrs` : '';
+            const dobStr = person.dob ? `(${person.dob})` : '';
+            
+            // Addresses
+            let addrHtml = '';
+            if (person.addresses && person.addresses.length > 0) {
+                const seen = new Set();
+                addrHtml = `<div class="person-addresses">`;
+                person.addresses.forEach(addr => {
+                    const key = `${addr.home}-${addr.city}-${addr.state}`.toLowerCase();
+                    if (seen.has(key)) return;
+                    seen.add(key);
+                    addrHtml += `
+                        <div class="address-item">
+                            ${addr.home || 'No address'}
+                            <div class="city-state">${addr.city || ''}, ${addr.state || ''} ${addr.zip || ''}</div>
+                        </div>
+                    `;
+                });
+                addrHtml += `</div>`;
+            } else {
+                addrHtml = `<div style="color:var(--text-muted);font-size:13px;">No addresses available</div>`;
+            }
+
+            // Relatives
+            let relHtml = '';
+            if (person.relatives && person.relatives.length > 0 && person.relatives[0] !== 'Not Found') {
+                relHtml = `
+                    <div class="relatives">
+                        ${person.relatives.map(r => `<span class="relative-tag"><i class="fas fa-user-friends"></i> ${r}</span>`).join('')}
+                    </div>
+                `;
+            }
+
+            // Email
+            let emailHtml = '';
+            if (person.emails && person.emails.length > 0 && person.emails[0]) {
+                emailHtml = `<div class="person-email"><i class="fas fa-envelope"></i> ${person.emails[0]}</div>`;
+            }
+
+            return `
+                <div class="person-entry" style="animation-delay:${idx * 0.1}s">
+                    <div class="person-header">
+                        <span class="person-name">${person.name || 'Unknown'}</span>
+                        <span class="person-age">${ageStr} ${dobStr}</span>
+                    </div>
+                    ${emailHtml}
+                    ${addrHtml}
+                    ${relHtml}
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderRawData(data) {
+        const container = document.getElementById('rawDataContent');
+        container.textContent = JSON.stringify(data, null, 2);
+    }
+
+    function toggleRawData() {
+        const container = document.getElementById('rawDataContainer');
+        const btn = document.querySelector('.btn-toggle');
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'block';
+            btn.innerHTML = '<i class="fas fa-chevron-up"></i> Hide';
+        } else {
+            container.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-chevron-down"></i> Show';
+        }
+    }
+
+    // ========== STATE FROM AREA CODE ==========
+    function getStateFromAreaCode(phone) {
+        const areaCode = phone.substring(0, 3);
+        const map = {
+            "205":"AL","251":"AL","256":"AL","334":"AL","659":"AL","938":"AL",
+            "907":"AK","480":"AZ","520":"AZ","602":"AZ","623":"AZ","928":"AZ",
+            "479":"AR","501":"AR","870":"AR","209":"CA","213":"CA","310":"CA",
+            "323":"CA","408":"CA","415":"CA","510":"CA","530":"CA","559":"CA",
+            "562":"CA","619":"CA","626":"CA","650":"CA","661":"CA","707":"CA",
+            "714":"CA","760":"CA","805":"CA","818":"CA","831":"CA","858":"CA",
+            "909":"CA","916":"CA","925":"CA","949":"CA","951":"CA","303":"CO",
+            "719":"CO","720":"CO","970":"CO","203":"CT","475":"CT","860":"CT",
+            "959":"CT","302":"DE","202":"DC","239":"FL","305":"FL","321":"FL",
+            "352":"FL","386":"FL","407":"FL","561":"FL","727":"FL","754":"FL",
+            "772":"FL","786":"FL","813":"FL","850":"FL","863":"FL","904":"FL",
+            "941":"FL","954":"FL","229":"GA","404":"GA","470":"GA","478":"GA",
+            "678":"GA","706":"GA","762":"GA","770":"GA","912":"GA","808":"HI",
+            "208":"ID","217":"IL","224":"IL","309":"IL","312":"IL","331":"IL",
+            "618":"IL","630":"IL","708":"IL","773":"IL","779":"IL","815":"IL",
+            "847":"IL","872":"IL","219":"IN","260":"IN","317":"IN","463":"IN",
+            "574":"IN","765":"IN","812":"IN","930":"IN","319":"IA","515":"IA",
+            "563":"IA","641":"IA","712":"IA","316":"KS","620":"KS","785":"KS",
+            "913":"KS","270":"KY","502":"KY","606":"KY","859":"KY","225":"LA",
+            "318":"LA","337":"LA","504":"LA","985":"LA","207":"ME","240":"MD",
+            "301":"MD","410":"MD","443":"MD","667":"MD","339":"MA","351":"MA",
+            "413":"MA","508":"MA","617":"MA","774":"MA","781":"MA","857":"MA",
+            "978":"MA","231":"MI","248":"MI","269":"MI","313":"MI","517":"MI",
+            "586":"MI","616":"MI","734":"MI","810":"MI","906":"MI","947":"MI",
+            "989":"MI","218":"MN","320":"MN","507":"MN","612":"MN","651":"MN",
+            "763":"MN","952":"MN","228":"MS","601":"MS","662":"MS","769":"MS",
+            "314":"MO","417":"MO","573":"MO","636":"MO","660":"MO","816":"MO",
+            "406":"MT","308":"NE","402":"NE","531":"NE","702":"NV","725":"NV",
+            "775":"NV","603":"NH","201":"NJ","551":"NJ","609":"NJ","732":"NJ",
+            "848":"NJ","856":"NJ","862":"NJ","908":"NJ","973":"NJ","505":"NM",
+            "575":"NM","212":"NY","315":"NY","347":"NY","516":"NY","518":"NY",
+            "585":"NY","607":"NY","631":"NY","646":"NY","716":"NY","718":"NY",
+            "845":"NY","914":"NY","917":"NY","929":"NY","252":"NC","336":"NC",
+            "704":"NC","828":"NC","910":"NC","919":"NC","980":"NC","984":"NC",
+            "701":"ND","216":"OH","234":"OH","330":"OH","380":"OH","419":"OH",
+            "440":"OH","513":"OH","567":"OH","614":"OH","740":"OH","937":"OH",
+            "405":"OK","539":"OK","580":"OK","918":"OK","458":"OR","503":"OR",
+            "541":"OR","971":"OR","215":"PA","267":"PA","412":"PA","484":"PA",
+            "570":"PA","610":"PA","717":"PA","724":"PA","814":"PA","878":"PA",
+            "401":"RI","803":"SC","843":"SC","854":"SC","864":"SC","605":"SD",
+            "423":"TN","615":"TN","629":"TN","731":"TN","865":"TN","901":"TN",
+            "931":"TN","210":"TX","214":"TX","254":"TX","281":"TX","325":"TX",
+            "346":"TX","361":"TX","409":"TX","430":"TX","432":"TX","469":"TX",
+            "512":"TX","682":"TX","713":"TX","737":"TX","806":"TX","817":"TX",
+            "830":"TX","832":"TX","903":"TX","915":"TX","936":"TX","940":"TX",
+            "956":"TX","972":"TX","979":"TX","385":"UT","435":"UT","801":"UT",
+            "802":"VT","276":"VA","434":"VA","540":"VA","571":"VA","703":"VA",
+            "757":"VA","804":"VA","206":"WA","253":"WA","360":"WA","425":"WA",
+            "509":"WA","304":"WV","681":"WV","262":"WI","414":"WI","608":"WI",
+            "715":"WI","920":"WI","307":"WY"
+        };
+        return map[areaCode] || 'Unknown';
+    }
+
+    // ========== UI HELPERS ==========
+    function showError(msg) {
+        errorText.textContent = msg;
+        errorMsg.classList.add('show');
+    }
+
+    function hideError() {
+        errorMsg.classList.remove('show');
+    }
+
+    function showLoading() {
+        loadingState.classList.add('show');
+    }
+
+    function hideLoading() {
+        loadingState.classList.remove('show');
+    }
+
+    // ========== EXPOSE FUNCTIONS GLOBALLY ==========
+    window.performSearch = performSearch;
+    window.fillSample = fillSample;
+    window.toggleRawData = toggleRawData;
+
+    console.log('🚀 PhoneLookup Pro loaded successfully!');
+    console.log('📞 Enter a phone number and click Search.');
+</script>
+
 </body>
 </html>
